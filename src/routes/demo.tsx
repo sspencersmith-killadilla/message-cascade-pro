@@ -1,6 +1,8 @@
 import { useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Bell, RotateCcw, Send, Sparkles, Wand2 } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
+import { Bell, Loader2, RotateCcw, Send, Sparkles, Wand2 } from "lucide-react";
+import { summarizeDemoFeedback, type DemoSummary } from "@/lib/demo.functions";
 import { toast } from "sonner";
 import { completionStats, statsByDepartment } from "@/lib/cadence";
 import { Brand } from "@/components/brand";
@@ -174,8 +176,27 @@ function AdminView({ cascade, recs, onSimulate, onNudge }: { cascade: Cascade; r
   const overdue = cascade.deadline < inDays(0);
   const pending = recs.filter((r) => !r.shared_at);
   const responses = recs.filter((r) => r.responded);
-  const [summary, setSummary] = useState<string[] | null>(null);
-  const summaryFor = useMemo(() => responses.length, [summary]); // eslint-disable-line react-hooks/exhaustive-deps
+  const [summary, setSummary] = useState<DemoSummary | null>(null);
+  const [summaryFor, setSummaryFor] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const runSummary = useServerFn(summarizeDemoFeedback);
+  async function summarize() {
+    setLoading(true);
+    try {
+      const res = await runSummary({ data: {
+        title: cascade.title.slice(0, 200),
+        message: cascade.message.slice(0, 4000),
+        responses: responses.slice(0, 12).map((r) => ({ department: (r.department ?? "—").slice(0, 60), feedback: (r.feedback ?? "").slice(0, 1000) || "(no comment)", questions: r.questions ? r.questions.slice(0, 500) : undefined })),
+      } });
+      if (res.error || !res.summary) { toast.error(res.error ?? "Summary failed"); return; }
+      setSummary(res.summary);
+      setSummaryFor(responses.length);
+    } catch {
+      toast.error("The AI couldn't summarize this feedback.");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div className="mt-4">
@@ -220,12 +241,20 @@ function AdminView({ cascade, recs, onSimulate, onNudge }: { cascade: Cascade; r
         <div className="rounded-xl border bg-card p-6 shadow-soft">
           <div className="flex items-center justify-between">
             <h3 className="flex items-center gap-2 text-base text-primary"><Sparkles className="h-4 w-4 text-accent" /> Team feedback</h3>
-            <Button size="sm" disabled={!responses.length} onClick={() => setSummary(buildSummary(responses))}>Summarize with AI</Button>
+            <Button size="sm" disabled={!responses.length || loading} onClick={summarize}>
+              {loading ? <Loader2 className="mr-1 h-4 w-4 animate-spin" /> : null}{loading ? "Reading feedback…" : "Summarize with AI"}
+            </Button>
           </div>
           {!responses.length && <p className="mt-3 text-sm text-muted-foreground">No feedback yet. Switch to the Manager view to reply, or fast-forward a day.</p>}
           {summary && (
-            <div className="mt-4 grid gap-2 text-sm">
-              {summary.map((t) => <div key={t} className="rounded-lg bg-secondary p-3">{t}</div>)}
+            <div className="mt-4 space-y-3 text-sm">
+              <p className="rounded-lg bg-secondary p-3">{summary.overview}</p>
+              {summary.themes.length > 0 && <div><div className="mb-1 font-semibold text-primary">Themes</div>
+                <ul className="space-y-1">{summary.themes.map((t) => <li key={t.title}><strong>{t.title}</strong> — {t.detail}</li>)}</ul></div>}
+              {summary.concerns.length > 0 && <div><div className="mb-1 font-semibold text-primary">Concerns</div>
+                <ul className="list-disc space-y-1 pl-5">{summary.concerns.map((t) => <li key={t}>{t}</li>)}</ul></div>}
+              {summary.questions.length > 0 && <div><div className="mb-1 font-semibold text-primary">Open questions</div>
+                <ul className="list-disc space-y-1 pl-5">{summary.questions.map((t) => <li key={t}>{t}</li>)}</ul></div>}
               {summaryFor !== responses.length && <p className="text-xs text-muted-foreground">New feedback arrived — summarize again to include it.</p>}
             </div>
           )}
@@ -242,18 +271,6 @@ function AdminView({ cascade, recs, onSimulate, onNudge }: { cascade: Cascade; r
       </div>
     </div>
   );
-}
-
-function buildSummary(rs: Rec[]): string[] {
-  const text = rs.map((r) => `${r.feedback} ${r.questions ?? ""}`.toLowerCase()).join(" ");
-  const themes: string[] = [`Overview: ${rs.length} team${rs.length === 1 ? "" : "s"} responded across ${new Set(rs.map((r) => r.department)).size} department(s).`];
-  if (/field|on-site|outdoor|crew/.test(text)) themes.push("Fairness for on-site roles — crews want to know how they benefit.");
-  if (/equipment|stipend|laptop/.test(text)) themes.push("Equipment and stipends — questions about home-office costs.");
-  if (/meeting|core|schedul/.test(text)) themes.push("Meeting norms — requests for core in-office days.");
-  if (/positive|support|like|welcome/.test(text)) themes.push("Overall sentiment is positive.");
-  const qs = rs.map((r) => r.questions).filter(Boolean);
-  if (qs.length) themes.push(`Open questions: ${qs.join(" · ")}`);
-  return themes;
 }
 
 function ManagerView({ cascade, recs, onUpdate }: { cascade: Cascade; recs: Rec[]; onUpdate: (name: string, p: Partial<Rec>, msg: string) => void }) {
