@@ -16,3 +16,4 @@
 - Privileged/multi-row work (send, nudge, import, AI) goes through `src/lib/cascades.functions.ts` with `requireSupabaseAuth` and an admin check first. Why: browser cannot be trusted to create recipients or queue emails.
 - All outgoing email goes through `queueEmails` in `src/lib/email.server.ts` (logs to `email_log`). Why: single place to wire real delivery once a sending domain exists.
 - Daily reminders run from pg_cron calling `/api/public/hooks/cadence-reminders`, guarded by `authenticateCronRequest`.
+- PWA: `public/manifest.webmanifest` + `public/sw.js` (network-first pages, never caches server fns/api); registered in `__root.tsx` only outside iframes/preview hosts. Why: stale caches break the editor preview. Bump the cache name on breaking asset changes.
