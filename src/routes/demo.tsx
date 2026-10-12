@@ -28,7 +28,7 @@ export const Route = createFileRoute("/demo")({
 type Rec = {
   name: string; department: string;
   acknowledged_at: string | null; shared_at: string | null;
-  responded: boolean; method?: string; feedback?: string; questions?: string; nudged?: number;
+  responded: boolean; method?: string | undefined; feedback?: string | undefined; questions?: string | undefined; nudged?: number | undefined;
 };
 type Cascade = { title: string; message: string; points: string; deadline: string; departments: string[] };
 
