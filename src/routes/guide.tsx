@@ -18,7 +18,7 @@ export const Route = createFileRoute("/guide")({
 function Guide() {
   return (
     <DocPage title="User guide" intro="Everything you need to run a cascade, from first sign-in to reading your teams' feedback.">
-      <h2 className="text-sm font-semibold uppercase tracking-wide text-secondary">For admins</h2>
+      <h2 className="text-sm font-semibold uppercase tracking-wide text-primary">For admins</h2>
       <Step n={1} title="Create your account and organization">
         <p>Go to <strong>Sign in</strong> and create an account with your email or Google. The first time you sign in you'll be asked to name your organization. You become its <strong>Owner</strong>.</p>
       </Step>
@@ -46,7 +46,7 @@ function Guide() {
         <p>The <strong>Dashboard</strong> shows active cascades and completion over time. The <strong>Cascades</strong> list lets you search everything you've sent.</p>
       </Step>
 
-      <h2 className="pt-4 text-sm font-semibold uppercase tracking-wide text-secondary">For managers</h2>
+      <h2 className="pt-4 text-sm font-semibold uppercase tracking-wide text-primary">For managers</h2>
       <Step n={1} title="Join">
         <p>When you're invited, sign up with the <strong>same email address</strong> the invite went to. You'll join your organization automatically.</p>
       </Step>
@@ -60,7 +60,7 @@ function Guide() {
         <p>Write your team's reactions and questions and click <strong>Send feedback</strong>. The cascade then moves to <strong>Done</strong>.</p>
       </Step>
 
-      <h2 className="pt-4 text-sm font-semibold uppercase tracking-wide text-secondary">Install on your device</h2>
+      <h2 className="pt-4 text-sm font-semibold uppercase tracking-wide text-primary">Install on your device</h2>
       <Step n="📱" title="Add Cadence to your home screen">
         <p><strong>iPhone/iPad (Safari):</strong> tap the Share button, then <strong>Add to Home Screen</strong>.</p>
         <p><strong>Android (Chrome):</strong> tap the ⋮ menu, then <strong>Install app</strong>.</p>
