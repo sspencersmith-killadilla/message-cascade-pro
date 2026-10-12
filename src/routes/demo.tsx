@@ -74,7 +74,7 @@ function Demo() {
       if (r.responded || Math.random() < 0.35) return r;
       changed++;
       if (!r.acknowledged_at) return { ...r, acknowledged_at: stamp() };
-      if (!r.shared_at) return { ...r, shared_at: stamp(), method: METHODS[i % METHODS.length] };
+      if (!r.shared_at) return { ...r, shared_at: stamp(), method: METHODS[i % METHODS.length]! };
       const [feedback, questions] = SAMPLE_FEEDBACK[i % SAMPLE_FEEDBACK.length]!;
       return { ...r, responded: true, feedback, questions };
     }));
