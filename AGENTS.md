@@ -14,6 +14,6 @@
 - Org roles live in `org_members.role` (owner/admin/manager/member), never on profiles; invites are `org_members` rows with `user_id` null, claimed by email on signup or via `claim_my_invites()`. Why: avoids privilege escalation and a separate invite table.
 - Pure business rules (overdue, reminders, completion %, import validation) live in `src/lib/cadence.ts` with tests in `src/test/cadence-rules.test.ts`. Why: shared by UI, server functions and the cron route.
 - Privileged/multi-row work (send, nudge, import, AI) goes through `src/lib/cascades.functions.ts` with `requireSupabaseAuth` and an admin check first. Why: browser cannot be trusted to create recipients or queue emails.
-- All outgoing email goes through `queueEmails` in `src/lib/email.server.ts` (logs to `email_log`). Why: single place to wire real delivery once a sending domain exists.
+- All outgoing email goes through `queueEmails` in `src/lib/email.server.ts`: logs to `email_log`, then sends via the `cadence-notice` template (Lovable managed email). Why: one place for logging + delivery.
 - Daily reminders run from pg_cron calling `/api/public/hooks/cadence-reminders`, guarded by `authenticateCronRequest`.
 - PWA: `public/manifest.webmanifest` + `public/sw.js` (network-first pages, never caches server fns/api); registered in `__root.tsx` only outside iframes/preview hosts. Why: stale caches break the editor preview. Bump the cache name on breaking asset changes.
