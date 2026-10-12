@@ -10,33 +10,198 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppRouteImport } from './routes/app'
+import { Route as DemoRouteImport } from './routes/demo'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as TermsRouteImport } from './routes/terms'
+import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AppInboxRouteImport } from './routes/app.inbox'
+import { Route as AppPeopleRouteImport } from './routes/app.people'
+import { Route as AppSettingsRouteImport } from './routes/app.settings'
+import { Route as AppCascadesIndexRouteImport } from './routes/app.cascades.index'
+import { Route as AppCascadesIdRouteImport } from './routes/app.cascades.$id'
+import { Route as AppCascadesNewRouteImport } from './routes/app.cascades.new'
+import { Route as ApiPublicHooksCadenceRemindersRouteImport } from './routes/api/public/hooks/cadence-reminders'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DemoRoute = DemoRouteImport.update({
+  id: '/demo',
+  path: '/demo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppInboxRoute = AppInboxRouteImport.update({
+  id: '/inbox',
+  path: '/inbox',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPeopleRoute = AppPeopleRouteImport.update({
+  id: '/people',
+  path: '/people',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCascadesIndexRoute = AppCascadesIndexRouteImport.update({
+  id: '/cascades/',
+  path: '/cascades/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCascadesIdRoute = AppCascadesIdRouteImport.update({
+  id: '/cascades/$id',
+  path: '/cascades/$id',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCascadesNewRoute = AppCascadesNewRouteImport.update({
+  id: '/cascades/new',
+  path: '/cascades/new',
+  getParentRoute: () => AppRoute,
+} as any)
+const ApiPublicHooksCadenceRemindersRoute =
+  ApiPublicHooksCadenceRemindersRouteImport.update({
+    id: '/api/public/hooks/cadence-reminders',
+    path: '/api/public/hooks/cadence-reminders',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/demo': typeof DemoRoute
+  '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
+  '/app/inbox': typeof AppInboxRoute
+  '/app/people': typeof AppPeopleRoute
+  '/app/settings': typeof AppSettingsRoute
+  '/app/': typeof AppIndexRoute
+  '/app/cascades/$id': typeof AppCascadesIdRoute
+  '/app/cascades/new': typeof AppCascadesNewRoute
+  '/app/cascades/': typeof AppCascadesIndexRoute
+  '/api/public/hooks/cadence-reminders': typeof ApiPublicHooksCadenceRemindersRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/demo': typeof DemoRoute
+  '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
+  '/app/inbox': typeof AppInboxRoute
+  '/app/people': typeof AppPeopleRoute
+  '/app/settings': typeof AppSettingsRoute
+  '/app': typeof AppIndexRoute
+  '/app/cascades/$id': typeof AppCascadesIdRoute
+  '/app/cascades/new': typeof AppCascadesNewRoute
+  '/app/cascades': typeof AppCascadesIndexRoute
+  '/api/public/hooks/cadence-reminders': typeof ApiPublicHooksCadenceRemindersRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/demo': typeof DemoRoute
+  '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
+  '/app/inbox': typeof AppInboxRoute
+  '/app/people': typeof AppPeopleRoute
+  '/app/settings': typeof AppSettingsRoute
+  '/app/': typeof AppIndexRoute
+  '/app/cascades/$id': typeof AppCascadesIdRoute
+  '/app/cascades/new': typeof AppCascadesNewRoute
+  '/app/cascades/': typeof AppCascadesIndexRoute
+  '/api/public/hooks/cadence-reminders': typeof ApiPublicHooksCadenceRemindersRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/demo'
+    | '/login'
+    | '/privacy'
+    | '/terms'
+    | '/app/inbox'
+    | '/app/people'
+    | '/app/settings'
+    | '/app/'
+    | '/app/cascades/$id'
+    | '/app/cascades/new'
+    | '/app/cascades/'
+    | '/api/public/hooks/cadence-reminders'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/demo'
+    | '/login'
+    | '/privacy'
+    | '/terms'
+    | '/app/inbox'
+    | '/app/people'
+    | '/app/settings'
+    | '/app'
+    | '/app/cascades/$id'
+    | '/app/cascades/new'
+    | '/app/cascades'
+    | '/api/public/hooks/cadence-reminders'
+  id:
+    | '__root__'
+    | '/'
+    | '/app'
+    | '/demo'
+    | '/login'
+    | '/privacy'
+    | '/terms'
+    | '/app/inbox'
+    | '/app/people'
+    | '/app/settings'
+    | '/app/'
+    | '/app/cascades/$id'
+    | '/app/cascades/new'
+    | '/app/cascades/'
+    | '/api/public/hooks/cadence-reminders'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
+  DemoRoute: typeof DemoRoute
+  LoginRoute: typeof LoginRoute
+  PrivacyRoute: typeof PrivacyRoute
+  TermsRoute: typeof TermsRoute
+  ApiPublicHooksCadenceRemindersRoute: typeof ApiPublicHooksCadenceRemindersRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +213,130 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/demo': {
+      id: '/demo'
+      path: '/demo'
+      fullPath: '/demo'
+      preLoaderRoute: typeof DemoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/inbox': {
+      id: '/app/inbox'
+      path: '/inbox'
+      fullPath: '/app/inbox'
+      preLoaderRoute: typeof AppInboxRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/people': {
+      id: '/app/people'
+      path: '/people'
+      fullPath: '/app/people'
+      preLoaderRoute: typeof AppPeopleRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/settings': {
+      id: '/app/settings'
+      path: '/settings'
+      fullPath: '/app/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/cascades/': {
+      id: '/app/cascades/'
+      path: '/cascades'
+      fullPath: '/app/cascades/'
+      preLoaderRoute: typeof AppCascadesIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/cascades/$id': {
+      id: '/app/cascades/$id'
+      path: '/cascades/$id'
+      fullPath: '/app/cascades/$id'
+      preLoaderRoute: typeof AppCascadesIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/cascades/new': {
+      id: '/app/cascades/new'
+      path: '/cascades/new'
+      fullPath: '/app/cascades/new'
+      preLoaderRoute: typeof AppCascadesNewRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/api/public/hooks/cadence-reminders': {
+      id: '/api/public/hooks/cadence-reminders'
+      path: '/api/public/hooks/cadence-reminders'
+      fullPath: '/api/public/hooks/cadence-reminders'
+      preLoaderRoute: typeof ApiPublicHooksCadenceRemindersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppInboxRoute: typeof AppInboxRoute
+  AppPeopleRoute: typeof AppPeopleRoute
+  AppSettingsRoute: typeof AppSettingsRoute
+  AppIndexRoute: typeof AppIndexRoute
+  AppCascadesIdRoute: typeof AppCascadesIdRoute
+  AppCascadesNewRoute: typeof AppCascadesNewRoute
+  AppCascadesIndexRoute: typeof AppCascadesIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppInboxRoute: AppInboxRoute,
+  AppPeopleRoute: AppPeopleRoute,
+  AppSettingsRoute: AppSettingsRoute,
+  AppIndexRoute: AppIndexRoute,
+  AppCascadesIdRoute: AppCascadesIdRoute,
+  AppCascadesNewRoute: AppCascadesNewRoute,
+  AppCascadesIndexRoute: AppCascadesIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
+  DemoRoute: DemoRoute,
+  LoginRoute: LoginRoute,
+  PrivacyRoute: PrivacyRoute,
+  TermsRoute: TermsRoute,
+  ApiPublicHooksCadenceRemindersRoute: ApiPublicHooksCadenceRemindersRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
