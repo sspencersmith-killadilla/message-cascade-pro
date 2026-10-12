@@ -12,8 +12,10 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as DemoRouteImport } from './routes/demo'
+import { Route as GuideRouteImport } from './routes/guide'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as SelfHostRouteImport } from './routes/self-host'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AppInboxRouteImport } from './routes/app.inbox'
@@ -39,6 +41,11 @@ const DemoRoute = DemoRouteImport.update({
   path: '/demo',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GuideRoute = GuideRouteImport.update({
+  id: '/guide',
+  path: '/guide',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -47,6 +54,11 @@ const LoginRoute = LoginRouteImport.update({
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SelfHostRoute = SelfHostRouteImport.update({
+  id: '/self-host',
+  path: '/self-host',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TermsRoute = TermsRouteImport.update({
@@ -100,8 +112,10 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/demo': typeof DemoRoute
+  '/guide': typeof GuideRoute
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
+  '/self-host': typeof SelfHostRoute
   '/terms': typeof TermsRoute
   '/app/inbox': typeof AppInboxRoute
   '/app/people': typeof AppPeopleRoute
@@ -115,8 +129,10 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/demo': typeof DemoRoute
+  '/guide': typeof GuideRoute
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
+  '/self-host': typeof SelfHostRoute
   '/terms': typeof TermsRoute
   '/app/inbox': typeof AppInboxRoute
   '/app/people': typeof AppPeopleRoute
@@ -132,8 +148,10 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/demo': typeof DemoRoute
+  '/guide': typeof GuideRoute
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
+  '/self-host': typeof SelfHostRoute
   '/terms': typeof TermsRoute
   '/app/inbox': typeof AppInboxRoute
   '/app/people': typeof AppPeopleRoute
@@ -150,8 +168,10 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/demo'
+    | '/guide'
     | '/login'
     | '/privacy'
+    | '/self-host'
     | '/terms'
     | '/app/inbox'
     | '/app/people'
@@ -165,8 +185,10 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/demo'
+    | '/guide'
     | '/login'
     | '/privacy'
+    | '/self-host'
     | '/terms'
     | '/app/inbox'
     | '/app/people'
@@ -181,8 +203,10 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/demo'
+    | '/guide'
     | '/login'
     | '/privacy'
+    | '/self-host'
     | '/terms'
     | '/app/inbox'
     | '/app/people'
@@ -198,8 +222,10 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
   DemoRoute: typeof DemoRoute
+  GuideRoute: typeof GuideRoute
   LoginRoute: typeof LoginRoute
   PrivacyRoute: typeof PrivacyRoute
+  SelfHostRoute: typeof SelfHostRoute
   TermsRoute: typeof TermsRoute
   ApiPublicHooksCadenceRemindersRoute: typeof ApiPublicHooksCadenceRemindersRoute
 }
@@ -227,6 +253,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DemoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/guide': {
+      id: '/guide'
+      path: '/guide'
+      fullPath: '/guide'
+      preLoaderRoute: typeof GuideRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -239,6 +272,13 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/self-host': {
+      id: '/self-host'
+      path: '/self-host'
+      fullPath: '/self-host'
+      preLoaderRoute: typeof SelfHostRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/terms': {
@@ -333,8 +373,10 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
   DemoRoute: DemoRoute,
+  GuideRoute: GuideRoute,
   LoginRoute: LoginRoute,
   PrivacyRoute: PrivacyRoute,
+  SelfHostRoute: SelfHostRoute,
   TermsRoute: TermsRoute,
   ApiPublicHooksCadenceRemindersRoute: ApiPublicHooksCadenceRemindersRoute,
 }

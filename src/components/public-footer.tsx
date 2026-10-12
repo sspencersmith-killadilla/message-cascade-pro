@@ -7,6 +7,8 @@ export function PublicFooter() {
         <span>Cadence · a sibling of Tandem · MIT licensed</span>
         <div className="flex gap-4">
           <Link to="/demo" className="hover:text-foreground">Demo</Link>
+          <Link to="/guide" className="hover:text-foreground">User guide</Link>
+          <Link to="/self-host" className="hover:text-foreground">Self-hosting</Link>
           <Link to="/terms" className="hover:text-foreground">Terms</Link>
           <Link to="/privacy" className="hover:text-foreground">Privacy</Link>
         </div>
