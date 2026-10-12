@@ -25,6 +25,7 @@ import { Route as AppCascadesIndexRouteImport } from './routes/app.cascades.inde
 import { Route as AppCascadesIdRouteImport } from './routes/app.cascades.$id'
 import { Route as AppCascadesNewRouteImport } from './routes/app.cascades.new'
 import { Route as ApiPublicHooksCadenceRemindersRouteImport } from './routes/api/public/hooks/cadence-reminders'
+import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -107,6 +108,12 @@ const ApiPublicHooksCadenceRemindersRoute =
     path: '/api/public/hooks/cadence-reminders',
     getParentRoute: () => rootRouteImport,
   } as any)
+const LovableEmailTransactionalPreviewRoute =
+  LovableEmailTransactionalPreviewRouteImport.update({
+    id: '/lovable/email/transactional/preview',
+    path: '/lovable/email/transactional/preview',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -125,6 +132,7 @@ export interface FileRoutesByFullPath {
   '/app/cascades/new': typeof AppCascadesNewRoute
   '/app/cascades/': typeof AppCascadesIndexRoute
   '/api/public/hooks/cadence-reminders': typeof ApiPublicHooksCadenceRemindersRoute
+  '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -142,6 +150,7 @@ export interface FileRoutesByTo {
   '/app/cascades/new': typeof AppCascadesNewRoute
   '/app/cascades': typeof AppCascadesIndexRoute
   '/api/public/hooks/cadence-reminders': typeof ApiPublicHooksCadenceRemindersRoute
+  '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -161,6 +170,7 @@ export interface FileRoutesById {
   '/app/cascades/new': typeof AppCascadesNewRoute
   '/app/cascades/': typeof AppCascadesIndexRoute
   '/api/public/hooks/cadence-reminders': typeof ApiPublicHooksCadenceRemindersRoute
+  '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -181,6 +191,7 @@ export interface FileRouteTypes {
     | '/app/cascades/new'
     | '/app/cascades/'
     | '/api/public/hooks/cadence-reminders'
+    | '/lovable/email/transactional/preview'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -198,6 +209,7 @@ export interface FileRouteTypes {
     | '/app/cascades/new'
     | '/app/cascades'
     | '/api/public/hooks/cadence-reminders'
+    | '/lovable/email/transactional/preview'
   id:
     | '__root__'
     | '/'
@@ -216,6 +228,7 @@ export interface FileRouteTypes {
     | '/app/cascades/new'
     | '/app/cascades/'
     | '/api/public/hooks/cadence-reminders'
+    | '/lovable/email/transactional/preview'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -228,6 +241,7 @@ export interface RootRouteChildren {
   SelfHostRoute: typeof SelfHostRoute
   TermsRoute: typeof TermsRoute
   ApiPublicHooksCadenceRemindersRoute: typeof ApiPublicHooksCadenceRemindersRoute
+  LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -344,6 +358,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksCadenceRemindersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/lovable/email/transactional/preview': {
+      id: '/lovable/email/transactional/preview'
+      path: '/lovable/email/transactional/preview'
+      fullPath: '/lovable/email/transactional/preview'
+      preLoaderRoute: typeof LovableEmailTransactionalPreviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -379,6 +400,7 @@ const rootRouteChildren: RootRouteChildren = {
   SelfHostRoute: SelfHostRoute,
   TermsRoute: TermsRoute,
   ApiPublicHooksCadenceRemindersRoute: ApiPublicHooksCadenceRemindersRoute,
+  LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
