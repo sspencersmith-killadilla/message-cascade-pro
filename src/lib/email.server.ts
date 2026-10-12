@@ -22,7 +22,7 @@ const CTA_LABEL: Record<EmailKind, string> = {
 };
 
 /** Splits a trailing link off the plain text so it can become a button. */
-export function splitLink(text: string): { body: string; url?: string } {
+export function splitLink(text: string): { body: string; url?: string | undefined } {
   const m = text.match(/\s*(https?:\/\/\S+)\s*$/);
   if (!m) return { body: text };
   return { body: text.slice(0, m.index).trim(), url: m[1] };
