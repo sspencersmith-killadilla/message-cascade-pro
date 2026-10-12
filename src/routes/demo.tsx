@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useDraft } from "@/hooks/use-draft";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { Bell, Loader2, RotateCcw, Send, Sparkles, Wand2 } from "lucide-react";
@@ -52,10 +53,10 @@ const inDays = (n: number) => new Date(Date.now() + n * 864e5).toISOString().sli
 const stamp = () => new Date().toISOString();
 
 function Demo() {
-  const [cascade, setCascade] = useState<Cascade | null>(null);
-  const [recs, setRecs] = useState<Rec[]>([]);
-  const [view, setView] = useState("admin");
-  const [log, setLog] = useState<string[]>([]);
+  const [cascade, setCascade] = useDraft<Cascade | null>("cadence-demo-cascade", null);
+  const [recs, setRecs] = useDraft<Rec[]>("cadence-demo-recs", []);
+  const [view, setView] = useDraft("cadence-demo-view", "admin");
+  const [log, setLog] = useDraft<string[]>("cadence-demo-log", []);
   const addLog = (s: string) => setLog((l) => [`${new Date().toLocaleTimeString()} · ${s}`, ...l].slice(0, 30));
 
   const reset = () => { setCascade(null); setRecs([]); setLog([]); setView("admin"); };

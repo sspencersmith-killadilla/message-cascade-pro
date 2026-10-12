@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { useDraft } from "@/hooks/use-draft";
 import { toast } from "sonner";
 import { Check, Eye } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -56,8 +57,8 @@ function InboxItem({ c, r }: { c: CascadeRow; r: CascadeRow["cascade_recipients"
   const org = useCurrentOrg();
   const qc = useQueryClient();
   const [method, setMethod] = useState(r.share_method ?? "Team meeting");
-  const [feedback, setFeedback] = useState("");
-  const [questions, setQuestions] = useState("");
+  const [feedback, setFeedback, clearFeedback] = useDraft(`cadence-fb-${r.id}`, "");
+  const [questions, setQuestions, clearQuestions] = useDraft(`cadence-q-${r.id}`, "");
   const [busy, setBusy] = useState(false);
   const myResponses = c.cascade_responses.filter((x) => x.member_id === org.id);
   const refresh = () => qc.invalidateQueries({ queryKey: ["cascades", org.org_id] });
@@ -80,6 +81,8 @@ function InboxItem({ c, r }: { c: CascadeRow; r: CascadeRow["cascade_recipients"
     if (error) { toast.error(error.message); return; }
     setFeedback("");
     setQuestions("");
+    clearFeedback();
+    clearQuestions();
     toast.success("Feedback sent");
     refresh();
   }
