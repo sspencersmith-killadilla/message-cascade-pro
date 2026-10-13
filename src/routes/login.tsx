@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export const Route = createFileRoute("/login")({
-  validateSearch: z.object({ mode: z.enum(["signin", "signup"]).optional() }),
+  validateSearch: z.object({ mode: z.enum(["signin", "signup", "forgot"]).optional() }),
   head: () => ({
     meta: [
       { title: "Sign in — Cadence" },
@@ -27,7 +27,7 @@ export const Route = createFileRoute("/login")({
 
 function Login() {
   const { mode: initial } = Route.useSearch();
-  const [mode, setMode] = useState<"signin" | "signup">(initial ?? "signin");
+  const [mode, setMode] = useState<"signin" | "signup" | "forgot">(initial ?? "signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -43,7 +43,12 @@ function Login() {
     e.preventDefault();
     setBusy(true);
     try {
-      if (mode === "signup") {
+      if (mode === "forgot") {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${window.location.origin}/reset-password` });
+        if (error) throw error;
+        toast.success("If that email has an account, a reset link is on its way.");
+        setMode("signin");
+      } else if (mode === "signup") {
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
@@ -71,21 +76,33 @@ function Login() {
     <div className="flex min-h-screen items-center justify-center bg-soft px-4">
       <div className="w-full max-w-sm rounded-2xl border bg-card p-8 shadow-soft">
         <Brand className="mb-6 justify-center" />
-        <h1 className="text-center text-2xl text-primary">{mode === "signup" ? "Create your account" : "Welcome back"}</h1>
+        <h1 className="text-center text-2xl text-primary">{mode === "signup" ? "Create your account" : mode === "forgot" ? "Reset your password" : "Welcome back"}</h1>
+        {mode === "forgot" ? (
+          <p className="mt-3 mb-4 text-center text-sm text-muted-foreground">Enter your email and we'll send you a link to choose a new password.</p>
+        ) : (<>
         <Button variant="outline" className="mt-6 w-full" onClick={google}>Continue with Google</Button>
         <div className="my-4 text-center text-xs text-muted-foreground">or</div>
+        </>)}
         <form onSubmit={submit} className="space-y-3">
           {mode === "signup" && (
             <div><Label htmlFor="name">Your name</Label><Input id="name" value={name} onChange={(e) => setName(e.target.value)} required /></div>
           )}
           <div><Label htmlFor="email">Email</Label><Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required /></div>
-          <div><Label htmlFor="pw">Password</Label><Input id="pw" type="password" minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} required /></div>
-          <Button type="submit" className="w-full" disabled={busy}>{mode === "signup" ? "Create account" : "Sign in"}</Button>
+          {mode !== "forgot" && (
+            <div>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="pw">Password</Label>
+                {mode === "signin" && <button type="button" className="text-xs font-medium text-highlight hover:underline" onClick={() => setMode("forgot")}>Forgot password?</button>}
+              </div>
+              <Input id="pw" type="password" minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} required />
+            </div>
+          )}
+          <Button type="submit" className="w-full" disabled={busy}>{mode === "signup" ? "Create account" : mode === "forgot" ? "Send reset link" : "Sign in"}</Button>
         </form>
         <p className="mt-4 text-center text-sm text-muted-foreground">
-          {mode === "signup" ? "Already have an account?" : "New to Cadence?"}{" "}
-          <button className="font-medium text-highlight hover:underline" onClick={() => setMode(mode === "signup" ? "signin" : "signup")}>
-            {mode === "signup" ? "Sign in" : "Create one"}
+          {mode === "signup" ? "Already have an account?" : mode === "forgot" ? "Remembered it?" : "New to Cadence?"}{" "}
+          <button className="font-medium text-highlight hover:underline" onClick={() => setMode(mode === "signin" ? "signup" : "signin")}>
+            {mode === "signin" ? "Create one" : "Sign in"}
           </button>
         </p>
         <p className="mt-2 text-center text-xs text-muted-foreground">Invited by your organization? Sign up with the email they used.</p>
