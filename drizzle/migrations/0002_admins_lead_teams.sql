@@ -1,0 +1,2 @@
+ALTER TABLE public.org_members ADD COLUMN IF NOT EXISTS leads_team boolean NOT NULL DEFAULT false;
+COMMENT ON COLUMN public.org_members.leads_team IS 'Admins/owners who also manage a team and receive cascades like managers.';

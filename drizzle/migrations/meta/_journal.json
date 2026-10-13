@@ -15,6 +15,13 @@
       "when": 1791825035355,
       "tag": "0001_enable_scheduling_extensions",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791897064494,
+      "tag": "0002_admins_lead_teams",
+      "breakpoints": true
     }
   ]
 }

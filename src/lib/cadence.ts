@@ -15,8 +15,8 @@ export function canSendCascades(role: OrgRole | null | undefined): boolean {
 }
 
 /** Only managers (and admins who also lead teams) receive cascades to pass on. */
-export function isCascadeRecipientRole(role: OrgRole): boolean {
-  return role === "manager";
+export function isCascadeRecipientRole(role: OrgRole, leadsTeam = false): boolean {
+  return role === "manager" || ((role === "admin" || role === "owner") && leadsTeam);
 }
 
 /** Overdue = deadline has passed (deadline day is still on time) and the manager hasn't shared it yet. */
@@ -98,6 +98,8 @@ export interface ImportRow {
 
 export interface ValidatedRow extends ImportRow {
   role: OrgRole;
+  /** Admins listed as someone's manager also receive cascades. */
+  leads_team?: boolean;
   errors: string[];
 }
 
@@ -134,6 +136,6 @@ export function validateImport(rows: Record<string, unknown>[]): ValidatedRow[] 
     let role: OrgRole = "member";
     if (r.role === "admin") role = "admin";
     else if (r.role === "manager" || managerEmails.has(r.email)) role = "manager";
-    return { ...r, role, errors };
+    return { ...r, role, leads_team: role === "admin" && managerEmails.has(r.email), errors };
   });
 }

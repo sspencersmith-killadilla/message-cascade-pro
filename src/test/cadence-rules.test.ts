@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { canSendCascades, isOverdue, completionStats, needsReminder, validateImport } from "@/lib/cadence";
+import { canSendCascades, isCascadeRecipientRole, isOverdue, completionStats, needsReminder, validateImport } from "@/lib/cadence";
 
 const today = new Date("2026-10-12T12:00:00Z");
 
@@ -44,5 +44,23 @@ describe("cadence rules", () => {
     expect(rows[0]!.role).toBe("manager");
     expect(rows[1]!.role).toBe("member");
     expect(validateImport([{ Name: "", Email: "bad" }])[0]!.errors).toContain("Invalid email");
+  });
+});
+
+describe("admins who are also managers", () => {
+  it("receive cascades only when marked as leading a team", () => {
+    expect(isCascadeRecipientRole("manager")).toBe(true);
+    expect(isCascadeRecipientRole("admin")).toBe(false);
+    expect(isCascadeRecipientRole("admin", true)).toBe(true);
+    expect(isCascadeRecipientRole("owner", true)).toBe(true);
+    expect(isCascadeRecipientRole("member", true)).toBe(false);
+  });
+  it("admins listed as someone's manager are flagged on import", () => {
+    const rows = validateImport([
+      { name: "Ava", email: "ava@x.org", role: "admin" },
+      { name: "Ben", email: "ben@x.org", manager: "ava@x.org" },
+    ]);
+    expect(rows[0]!.role).toBe("admin");
+    expect(rows[0]!.leads_team).toBe(true);
   });
 });

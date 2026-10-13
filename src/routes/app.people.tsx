@@ -8,7 +8,7 @@ import Papa from "papaparse";
 import { supabase } from "@/integrations/supabase/client";
 import { useCurrentOrg } from "@/hooks/use-org";
 import { membersQuery } from "@/lib/queries";
-import { validateImport, type ValidatedRow } from "@/lib/cadence";
+import { isCascadeRecipientRole, validateImport, type ValidatedRow } from "@/lib/cadence";
 import { importPeople } from "@/lib/cascades.functions";
 import { PageHeader, StatusPill } from "@/components/ui-bits";
 import { Button } from "@/components/ui/button";
@@ -57,7 +57,7 @@ function People() {
       const r = await doImport({
         data: {
           org_id: org.org_id,
-          rows: good.map((g) => ({ full_name: g.full_name, email: g.email, title: g.title, department: g.department, manager_email: g.manager_email, role: g.role === "owner" ? "admin" : g.role })),
+          rows: good.map((g) => ({ full_name: g.full_name, email: g.email, title: g.title, department: g.department, manager_email: g.manager_email, role: g.role === "owner" ? "admin" : g.role, leads_team: g.leads_team ?? false })),
         },
       });
       toast.success(`Imported ${r.imported} people · ${r.invited} invites queued`);
@@ -68,6 +68,12 @@ function People() {
     } finally {
       setBusy(false);
     }
+  }
+
+  async function setLeads(id: string, leads_team: boolean) {
+    const { error } = await supabase.from("org_members").update({ leads_team }).eq("id", id);
+    if (error) toast.error(error.message);
+    else { toast.success(leads_team ? "They'll now receive cascades to share with their team." : "They'll no longer receive cascades."); refresh(); }
   }
 
   async function setRole(id: string, role: "admin" | "manager" | "member") {
@@ -89,7 +95,7 @@ function People() {
     <>
       <PageHeader
         title="People"
-        subtitle={`${members.length} people · ${members.filter((m) => m.role === "manager").length} managers`}
+        subtitle={`${members.length} people · ${members.filter((m) => isCascadeRecipientRole(m.role, m.leads_team)).length} managers`}
         actions={
           <>
             <Button variant="ghost" onClick={() => { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([TEMPLATE], { type: "text/csv" })); a.download = "cadence-org-chart.csv"; a.click(); }}><Download /> Template</Button>
@@ -121,6 +127,12 @@ function People() {
                       <SelectTrigger className="h-8 w-28"><SelectValue /></SelectTrigger>
                       <SelectContent><SelectItem value="admin">Admin</SelectItem><SelectItem value="manager">Manager</SelectItem><SelectItem value="member">Member</SelectItem></SelectContent>
                     </Select>
+                  )}
+                  {(m.role === "owner" || m.role === "admin") && (
+                    <label className="mt-1.5 flex items-center gap-1.5 text-xs text-muted-foreground">
+                      <input type="checkbox" className="accent-[var(--primary)]" checked={m.leads_team} onChange={(e) => setLeads(m.id, e.target.checked)} />
+                      Also a manager
+                    </label>
                   )}
                 </td>
                 <td className="px-4 py-3"><StatusPill status={m.status === "active" ? "shared" : "pending"} /><span className="sr-only">{m.status}</span></td>
