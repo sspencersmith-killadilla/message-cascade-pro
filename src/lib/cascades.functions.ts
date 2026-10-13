@@ -27,7 +27,7 @@ export const sendCascade = createServerFn({ method: "POST" })
     await assertAdmin(ctx, c.org_id);
     if (c.status !== "draft") throw new Error("This cascade was already sent");
 
-    let q = ctx.supabase.from("org_members").select("id, email, full_name, department").eq("org_id", c.org_id).eq("role", "manager");
+    let q = ctx.supabase.from("org_members").select("id, email, full_name, department").eq("org_id", c.org_id).or("role.eq.manager,and(leads_team.eq.true,role.in.(admin,owner))");
     if (c.audience_departments && c.audience_departments.length > 0) q = q.in("department", c.audience_departments);
     const { data: managers, error: mErr } = await q;
     if (mErr) throw new Error(mErr.message);
@@ -94,6 +94,7 @@ const importRow = z.object({
   department: z.string().max(200).optional().default(""),
   manager_email: z.string().max(320).optional().default(""),
   role: z.enum(["admin", "manager", "member"]),
+  leads_team: z.boolean().optional().default(false),
 });
 
 /** Import or update people from the org chart spreadsheet and queue invites for new people. */
@@ -117,6 +118,7 @@ export const importPeople = createServerFn({ method: "POST" })
         department: r.department || null,
         manager_email: r.manager_email?.toLowerCase() || null,
         role: r.role,
+        leads_team: r.role === "admin" && r.leads_team,
       }));
     if (rows.length === 0) return { imported: 0, invited: 0 };
     const { error } = await ctx.supabase.from("org_members").upsert(rows, { onConflict: "org_id,email" });

@@ -15,8 +15,8 @@ export function canSendCascades(role: OrgRole | null | undefined): boolean {
 }
 
 /** Only managers (and admins who also lead teams) receive cascades to pass on. */
-export function isCascadeRecipientRole(role: OrgRole): boolean {
-  return role === "manager";
+export function isCascadeRecipientRole(role: OrgRole, leadsTeam = false): boolean {
+  return role === "manager" || ((role === "admin" || role === "owner") && leadsTeam);
 }
 
 /** Overdue = deadline has passed (deadline day is still on time) and the manager hasn't shared it yet. */

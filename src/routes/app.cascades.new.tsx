@@ -59,7 +59,7 @@ function Editor() {
     for (const m of members.data ?? []) if (m.department) s.add(m.department);
     return [...s].sort();
   }, [members.data]);
-  const managerCount = (members.data ?? []).filter((m) => m.role === "manager" && (allDepts || (m.department && depts.includes(m.department)))).length;
+  const managerCount = (members.data ?? []).filter((m) => isCascadeRecipientRole(m.role, m.leads_team) && (allDepts || (m.department && depts.includes(m.department)))).length;
 
   async function save(andSend: boolean) {
     if (!title.trim() || message.trim().length < 10) { toast.error("Add a title and a message of at least 10 characters."); return; }
