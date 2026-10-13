@@ -105,20 +105,20 @@ export const importPeople = createServerFn({ method: "POST" })
     await assertAdmin(ctx, data.org_id);
     const { data: existing } = await ctx.supabase.from("org_members").select("email, role").eq("org_id", data.org_id);
     const existingMap = new Map<string, string>((existing ?? []).map((e: { email: string; role: string }) => [e.email, e.role]));
-    const rows = data.rows.map((r) => {
-      const email = r.email.toLowerCase();
-      const prev = existingMap.get(email);
-      return {
+    // Skip the owner's row entirely: the owner can't be changed by import, and
+    // upserting a row with role 'owner' is blocked by the insert policy.
+    const rows = data.rows
+      .filter((r) => existingMap.get(r.email.toLowerCase()) !== "owner")
+      .map((r) => ({
         org_id: data.org_id,
-        email,
+        email: r.email.toLowerCase(),
         full_name: r.full_name,
         title: r.title || null,
         department: r.department || null,
         manager_email: r.manager_email?.toLowerCase() || null,
-        // never demote the owner via import
-        role: prev === "owner" ? "owner" : r.role,
-      };
-    });
+        role: r.role,
+      }));
+    if (rows.length === 0) return { imported: 0, invited: 0 };
     const { error } = await ctx.supabase.from("org_members").upsert(rows, { onConflict: "org_id,email" });
     if (error) throw new Error(error.message);
     const { data: org } = await ctx.supabase.from("organizations").select("name").eq("id", data.org_id).single();
