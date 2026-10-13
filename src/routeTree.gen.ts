@@ -15,6 +15,7 @@ import { Route as DemoRouteImport } from './routes/demo'
 import { Route as GuideRouteImport } from './routes/guide'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SelfHostRouteImport } from './routes/self-host'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AppIndexRouteImport } from './routes/app.index'
@@ -57,6 +58,11 @@ const LoginRoute = LoginRouteImport.update({
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SelfHostRoute = SelfHostRouteImport.update({
@@ -134,6 +140,7 @@ export interface FileRoutesByFullPath {
   '/guide': typeof GuideRoute
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/self-host': typeof SelfHostRoute
   '/terms': typeof TermsRoute
   '/app/inbox': typeof AppInboxRoute
@@ -154,6 +161,7 @@ export interface FileRoutesByTo {
   '/guide': typeof GuideRoute
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/self-host': typeof SelfHostRoute
   '/terms': typeof TermsRoute
   '/app/inbox': typeof AppInboxRoute
@@ -176,6 +184,7 @@ export interface FileRoutesById {
   '/guide': typeof GuideRoute
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/self-host': typeof SelfHostRoute
   '/terms': typeof TermsRoute
   '/app/inbox': typeof AppInboxRoute
@@ -199,6 +208,7 @@ export interface FileRouteTypes {
     | '/guide'
     | '/login'
     | '/privacy'
+    | '/reset-password'
     | '/self-host'
     | '/terms'
     | '/app/inbox'
@@ -219,6 +229,7 @@ export interface FileRouteTypes {
     | '/guide'
     | '/login'
     | '/privacy'
+    | '/reset-password'
     | '/self-host'
     | '/terms'
     | '/app/inbox'
@@ -240,6 +251,7 @@ export interface FileRouteTypes {
     | '/guide'
     | '/login'
     | '/privacy'
+    | '/reset-password'
     | '/self-host'
     | '/terms'
     | '/app/inbox'
@@ -262,6 +274,7 @@ export interface RootRouteChildren {
   GuideRoute: typeof GuideRoute
   LoginRoute: typeof LoginRoute
   PrivacyRoute: typeof PrivacyRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   SelfHostRoute: typeof SelfHostRoute
   TermsRoute: typeof TermsRoute
   ApiPublicHooksCadenceRemindersRoute: typeof ApiPublicHooksCadenceRemindersRoute
@@ -312,6 +325,13 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/self-host': {
@@ -437,6 +457,7 @@ const rootRouteChildren: RootRouteChildren = {
   GuideRoute: GuideRoute,
   LoginRoute: LoginRoute,
   PrivacyRoute: PrivacyRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   SelfHostRoute: SelfHostRoute,
   TermsRoute: TermsRoute,
   ApiPublicHooksCadenceRemindersRoute: ApiPublicHooksCadenceRemindersRoute,
