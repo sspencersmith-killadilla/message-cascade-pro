@@ -4,7 +4,7 @@ import { AlertTriangle, Plus } from "lucide-react";
 import { Bar as RBar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { useCurrentOrg } from "@/hooks/use-org";
 import { cascadesQuery, withResponded } from "@/lib/queries";
-import { canSendCascades, completionStats, isOverdue, statsByDepartment } from "@/lib/cadence";
+import { canSendCascades, isCascadeRecipientRole, completionStats, isOverdue, statsByDepartment } from "@/lib/cadence";
 import { Bar, Empty, PageHeader, Stat, StatusPill } from "@/components/ui-bits";
 import { Button } from "@/components/ui/button";
 
@@ -32,7 +32,7 @@ function Dashboard() {
           <Stat label="Shared all-time" value={mine.length - todo.length} tone="accent" />
         </div>
         <div className="mt-6">
-          {org.role === "manager" ? (
+          {isCascadeRecipientRole(org.role, org.leads_team) ? (
             <Button asChild><Link to="/app/inbox">Open my inbox</Link></Button>
           ) : (
             <Empty title="Nothing to do here yet" text="Your managers share cascades with you directly. Admins can make you a manager on the People page." />

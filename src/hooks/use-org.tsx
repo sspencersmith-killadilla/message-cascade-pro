@@ -8,6 +8,7 @@ export interface Membership {
   id: string;
   org_id: string;
   role: OrgRole;
+  leads_team: boolean;
   full_name: string | null;
   email: string;
   department: string | null;
@@ -40,7 +41,7 @@ export function OrgProvider({ children }: { children: ReactNode }) {
       await supabase.rpc("claim_my_invites");
       const { data, error } = await supabase
         .from("org_members")
-        .select("id, org_id, role, full_name, email, department, organizations(id, name, reminder_days_before)")
+        .select("id, org_id, role, leads_team, full_name, email, department, organizations(id, name, reminder_days_before)")
         .eq("user_id", user!.id)
         .order("created_at");
       if (error) throw error;

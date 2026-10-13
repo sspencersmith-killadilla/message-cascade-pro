@@ -8,7 +8,7 @@ import Papa from "papaparse";
 import { supabase } from "@/integrations/supabase/client";
 import { useCurrentOrg } from "@/hooks/use-org";
 import { membersQuery } from "@/lib/queries";
-import { validateImport, type ValidatedRow } from "@/lib/cadence";
+import { isCascadeRecipientRole, validateImport, type ValidatedRow } from "@/lib/cadence";
 import { importPeople } from "@/lib/cascades.functions";
 import { PageHeader, StatusPill } from "@/components/ui-bits";
 import { Button } from "@/components/ui/button";
