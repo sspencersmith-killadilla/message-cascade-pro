@@ -9,7 +9,7 @@ import { EmailChangeEmail } from '@/lib/email-templates/email-change'
 import { ReauthenticationEmail } from '@/lib/email-templates/reauthentication'
 
 // Configuration
-const SITE_NAME = "Message Cascade Pro"
+const SITE_NAME = "Cadence"
 const SENDER_DOMAIN = "notify.cadence.civicplexus.org"
 const ROOT_DOMAIN = "cadence.civicplexus.org"
 const FROM_DOMAIN = "notify.cadence.civicplexus.org"
