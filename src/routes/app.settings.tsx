@@ -67,6 +67,40 @@ function SettingsPage() {
           ))
         )}
       </div>
+      <ExportRecords orgId={org.org_id} orgName={org.organizations?.name ?? "cadence"} />
     </>
   );
 }
+
+function ExportRecords({ orgId, orgName }: { orgId: string; orgName: string }) {
+  const [busy, setBusy] = useState(false);
+  async function run() {
+    setBusy(true);
+    try {
+      const get = async (t: "cascades" | "cascade_recipients" | "cascade_responses" | "org_members" | "email_log" | "audit_log" | "cascade_attachments") => {
+        const { data, error } = await supabase.from(t).select("*").eq("org_id", orgId).order("created_at" as never);
+        if (error) throw error;
+        return (data ?? []).map((r) => Object.fromEntries(Object.entries(r).map(([k, v]) => [k, v !== null && typeof v === "object" ? JSON.stringify(v) : v])));
+      };
+      const [c, rc, rs, m, e, a, at] = await Promise.all([get("cascades"), get("cascade_recipients"), get("cascade_responses"), get("org_members"), get("email_log"), get("audit_log"), get("cascade_attachments")]);
+      const XLSX = await import("xlsx");
+      const wb = XLSX.utils.book_new();
+      const add = (name: string, rows: Record<string, unknown>[]) => XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows.length ? rows : [{ note: "No records" }]), name);
+      add("Cascades", c); add("Recipients", rc); add("Feedback", rs); add("People", m); add("Attachments", at); add("Email log", e); add("Deletion & audit log", a);
+      XLSX.writeFile(wb, `${orgName.replace(/[^\w-]+/g, "-")}-records-${new Date().toISOString().slice(0, 10)}.xlsx`);
+      toast.success("Records exported");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Export failed");
+    } finally {
+      setBusy(false);
+    }
+  }
+  return (
+    <div className="mt-10 max-w-lg rounded-xl border bg-card p-6 shadow-soft">
+      <h2 className="text-xl text-primary">Records & retention</h2>
+      <p className="mt-2 text-sm text-muted-foreground">Download every cascade, recipient status, piece of feedback, person, attachment record, email notice and the deletion log as one spreadsheet — ready for open records requests or archiving. Only admins can delete anything, and every deletion is permanently logged with who did it and a copy of what was removed.</p>
+      <Button className="mt-4" onClick={run} disabled={busy}>{busy ? "Exporting…" : "Export all records"}</Button>
+    </div>
+  );
+}
+
