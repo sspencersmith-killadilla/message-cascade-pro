@@ -1,14 +1,18 @@
-# Welcome to your Lovable project
+# Cadence- CivicPlexus
+
+can we take the cascade tool from civicplexus and pull it out as a separate and independent tool, named and branded similar to the tandem webapp we made? This needs to be able to function as a full cascade communications tool.
 
 This project was built with [Lovable](https://lovable.dev).
 
+**Live app**: https://message-cascade-pro.lovable.app
+
 ## Build with Lovable
 
-Open your project in the [Lovable editor](https://lovable.dev) and keep building.
+Continue developing this project in the [Lovable editor](https://lovable.dev/projects/e5d3b7a3-a32d-4ea1-9169-ab5b6f5b2d35).
 
 - **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: connect the project to GitHub and every change made in Lovable is committed straight to your repository.
-- **Full ownership**: this code is yours. Push to your repository and your changes sync back into Lovable, ready for your next prompt.
+- **Stay in sync**: every change made in Lovable is committed straight to this repository.
+- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
 
 ## Development
 
@@ -20,10 +24,3 @@ cd <repository-name>
 npm i
 npm run dev
 ```
-
-## Built with
-
-- TanStack Start
-- TypeScript
-- React
-- Tailwind CSS
